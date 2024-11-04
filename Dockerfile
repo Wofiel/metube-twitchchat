@@ -28,6 +28,27 @@ RUN sed -i 's/\r$//g' docker-entrypoint.sh && \
 COPY app ./app
 COPY --from=builder /metube/dist/metube ./ui/dist/metube
 
+RUN apk add \
+    fontconfig \
+    font-terminus \
+    font-inconsolata \
+    font-dejavu \
+    font-noto \
+    font-noto-cjk \
+    font-awesome \
+    font-noto-extra
+
+FROM tcd
+RUN apk add dotnet6-sdk
+RUN git clone https://github.com/lay295/TwitchDownloader.git && \
+    git checkout $(git describe --abbrev=0 --tags) && \
+    cd TwitchDownloader && \
+    dotnet restore TwitchDownloaderCLI && \
+    dotnet publish TwitchDownloaderCLI -p:PublishProfile=LinuxAlpine && \
+    chmod +x TwitchDownloaderCLI/bin/Release/net6.0/publish/TwitchDownloaderCLI
+
+COPY --from=tcd TwitchDownloaderCLI/bin/Release/net6.0/publish/TwitchDownloaderCLI ./tcd
+
 ENV UID=1000
 ENV GID=1000
 ENV UMASK=022
