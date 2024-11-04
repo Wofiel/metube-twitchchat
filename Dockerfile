@@ -11,7 +11,7 @@ RUN apk add \
     git
 RUN git clone https://github.com/lay295/TwitchDownloader.git
 RUN cd TwitchDownloader
-RUN git checkout $(git describe --abbrev=0 --tags)
+RUN git checkout 1.55.0
 RUN dotnet restore TwitchDownloaderCLI
 RUN dotnet publish TwitchDownloaderCLI -p:PublishProfile=LinuxAlpine
 RUN chmod +x TwitchDownloaderCLI/bin/Release/net6.0/publish/TwitchDownloaderCLI
