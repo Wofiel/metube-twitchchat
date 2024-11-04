@@ -10,8 +10,8 @@ RUN apk add \
     dotnet6-sdk \
     git
 RUN git clone https://github.com/lay295/TwitchDownloader.git && \
-    git checkout $(git describe --abbrev=0 --tags) && \
     cd TwitchDownloader && \
+    git checkout $(git describe --abbrev=0 --tags) && \
     dotnet restore TwitchDownloaderCLI && \
     dotnet publish TwitchDownloaderCLI -p:PublishProfile=LinuxAlpine && \
     chmod +x TwitchDownloaderCLI/bin/Release/net6.0/publish/TwitchDownloaderCLI
