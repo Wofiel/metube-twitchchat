@@ -45,8 +45,8 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_REPOSITORY }}:latest
             ${{ secrets.DOCKERHUB_REPOSITORY }}:${{ steps.date.outputs.date }}
-            ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:${{ steps.date.outputs.date }}
+            ghcr.io/${{ secrets.OWNER_LC }}/${{ secrets.REPO_NAME }}:latest
+            ghcr.io/${{ secrets.OWNER_LC }}/${{ secrets.REPO_NAME }}:${{ steps.date.outputs.date }}
 
   dockerhub-sync-readme:
     needs: dockerhub-build-push
