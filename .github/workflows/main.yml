@@ -9,6 +9,11 @@ jobs:
   dockerhub-build-push:
     runs-on: ubuntu-latest
     steps:
+      - name: set lower case owner name
+        run: |
+          echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
+        env:
+          OWNER: '${{ github.repository_owner }}'
       -
         name: Get current date
         id: date
@@ -34,7 +39,7 @@ jobs:
         with:
           registry: ghcr.io
           password: ${{ secrets.GITHUB_TOKEN }}
-          username: ${{ github.repository_owner }}
+          username: ${{ OWNER_LC }}
       -
         name: Build and push
         uses: docker/build-push-action@v5
