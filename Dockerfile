@@ -6,7 +6,9 @@ RUN npm ci && \
     node_modules/.bin/ng build --configuration production
 
 FROM node:lts-alpine as tcd
-RUN apk add dotnet6-sdk
+RUN apk add \
+    dotnet6-sdk \
+    git
 RUN git clone https://github.com/lay295/TwitchDownloader.git && \
     git checkout $(git describe --abbrev=0 --tags) && \
     cd TwitchDownloader && \
