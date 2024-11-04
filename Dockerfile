@@ -5,6 +5,14 @@ COPY ui ./
 RUN npm ci && \
     node_modules/.bin/ng build --configuration production
 
+FROM node:lts-alpine as tcd
+RUN apk add dotnet6-sdk
+RUN git clone https://github.com/lay295/TwitchDownloader.git && \
+    git checkout $(git describe --abbrev=0 --tags) && \
+    cd TwitchDownloader && \
+    dotnet restore TwitchDownloaderCLI && \
+    dotnet publish TwitchDownloaderCLI -p:PublishProfile=LinuxAlpine && \
+    chmod +x TwitchDownloaderCLI/bin/Release/net6.0/publish/TwitchDownloaderCLI
 
 FROM python:3.11-alpine
 
@@ -37,16 +45,7 @@ RUN apk add \
     font-noto-cjk \
     font-awesome \
     font-noto-extra
-
-FROM node:lts-alpine as tcd
-RUN apk add dotnet6-sdk
-RUN git clone https://github.com/lay295/TwitchDownloader.git && \
-    git checkout $(git describe --abbrev=0 --tags) && \
-    cd TwitchDownloader && \
-    dotnet restore TwitchDownloaderCLI && \
-    dotnet publish TwitchDownloaderCLI -p:PublishProfile=LinuxAlpine && \
-    chmod +x TwitchDownloaderCLI/bin/Release/net6.0/publish/TwitchDownloaderCLI
-
+    
 COPY --from=tcd TwitchDownloaderCLI/bin/Release/net6.0/publish/TwitchDownloaderCLI ./tcd
 
 ENV UID=1000
