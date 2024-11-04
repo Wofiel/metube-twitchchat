@@ -48,7 +48,7 @@ RUN apk add \
     font-awesome \
     font-noto-extra
     
-COPY --from=tcd TwitchDownloaderCLI/bin/Release/net6.0/publish/LinuxAlpine/TwitchDownloaderCLI ./tcd
+COPY --from=tcd /TwitchDownloader/TwitchDownloaderCLI/bin/Release/net6.0/publish/LinuxAlpine/TwitchDownloaderCLI ./tcd
 
 ENV UID=1000
 ENV GID=1000
