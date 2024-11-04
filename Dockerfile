@@ -9,9 +9,8 @@ FROM node:lts-alpine as tcd
 RUN apk add \
     dotnet6-sdk \
     git
-RUN git clone https://github.com/lay295/TwitchDownloader.git
+RUN git clone --depth 1 --branch 1.55.0 https://github.com/lay295/TwitchDownloader.git
 RUN cd TwitchDownloader
-RUN git checkout 1.55.0
 RUN dotnet restore TwitchDownloaderCLI
 RUN dotnet publish TwitchDownloaderCLI -p:PublishProfile=LinuxAlpine
 RUN chmod +x TwitchDownloaderCLI/bin/Release/net6.0/publish/TwitchDownloaderCLI
