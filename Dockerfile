@@ -38,7 +38,7 @@ RUN apk add \
     font-awesome \
     font-noto-extra
 
-FROM node:lts-alpine as build2
+FROM node:lts-alpine as tcd
 RUN apk add dotnet6-sdk
 RUN git clone https://github.com/lay295/TwitchDownloader.git && \
     git checkout $(git describe --abbrev=0 --tags) && \
