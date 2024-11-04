@@ -9,7 +9,8 @@ jobs:
   dockerhub-build-push:
     runs-on: ubuntu-latest
     steps:
-      - name: set lower case owner name
+      -
+        name: set lower case owner name
         run: |
           echo "OWNER_LC=${OWNER,,}" >>${GITHUB_ENV}
         env:
