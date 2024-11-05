@@ -46,7 +46,8 @@ RUN apk add \
     font-noto \
     font-noto-cjk \
     font-awesome \
-    font-noto-extra
+    font-noto-extra \
+    icu
     
 COPY --from=tcd /TwitchDownloader/TwitchDownloaderCLI/bin/Release/net6.0/publish/LinuxAlpine/TwitchDownloaderCLI ./tcd
 
