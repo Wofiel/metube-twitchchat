@@ -131,7 +131,7 @@ class Download:
                 self.info.tmp_render_location = f"{self.download_dir}/{self.info.title}_chat"
                 cmd = f"tcd chatdownload {self.info.url} -o {self.info.chat_location} --compression"
                 print(cmd)
-                self.popen_and_call(self.tcd_post,cmd)
+                self.popen_and_call(self.tcd_dl_post,cmd)
             self.status_queue.put({'status': 'finished' if ret == 0 else 'error'})
         except yt_dlp.utils.YoutubeDLError as exc:
             self.status_queue.put({'status': 'error', 'msg': str(exc)})
