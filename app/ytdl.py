@@ -98,7 +98,7 @@ class Download:
         subprocess.Popen(cmd)
 
     def tcd_dl_post(self):
-        cmd = ["./tcd","chatrender",
+        cmd = ["/app/tcd","chatrender",
                "-i",
                f"{self.info.chat_location}.gz", 
                "-o",
@@ -149,7 +149,7 @@ class Download:
             if "twitch.tv" in self.info.url:
                 self.info.chat_location = f"{self.download_dir}/{self.info.title}.json"
                 self.info.tmp_render_location = f"{self.download_dir}/{self.info.title}_chat"
-                cmd = ["tcd", "chatdownload", f"{self.info.url}", "-o", f"{self.info.chat_location}", "--compression"]
+                cmd = ["/app/tcd", "chatdownload", f"{self.info.url}", "-o", f"{self.info.chat_location}", "--compression"]
                 print(cmd)
                 self.popen_and_call(self.tcd_dl_post,(cmd,))
             self.status_queue.put({'status': 'finished' if ret == 0 else 'error'})
