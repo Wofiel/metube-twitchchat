@@ -82,13 +82,32 @@ class Download:
         return thread
 
     def tcd_render_post(self):
-        cmd = f"ffmpeg -i {self.info.filename} -i {self.info.tmp_render_location}.mp4 -i {self.info.tmp_render_location}_mask.mp4 -filter_complex \"[1][2]alphamerge[b],[0][b]overlay=x=1570:y=480\" {self.info.filename}.chat.mp4"
+        cmd = ["ffmpeg",
+               "-i",
+               f"{self.info.filename}",
+               "-i",
+               f"{self.info.tmp_render_location}.mp4",
+               "-i",
+               f"{self.info.tmp_render_location}_mask.mp4",
+               "-filter_complex",
+               "\"[1][2]alphamerge[b],[0][b]overlay=x=1570:y=480\"",
+               f"{self.info.filename}.chat.mp4"
+              ]
         print(cmd)
         #todo:cleanup
         subprocess.Popen(cmd)
 
     def tcd_dl_post(self):
-        cmd = f"./tcd chatrender -i {self.info.chat_location}.gz -o {self.info.tmp_render_location} --background-color=#00000000 --outline=true --outline-size=2 --generate-mask=true"
+        cmd = ["./tcd","chatrender",
+               "-i",
+               f"{self.info.chat_location}.gz", 
+               "-o",
+               f"{self.info.tmp_render_location}",
+               "--background-color=#00000000",
+               "--outline=true",
+               "--outline-size=2",
+               "--generate-mask=true"
+              ]
         print(cmd)
         popen_and_call(tcd_render_post, cmd)
 
@@ -130,7 +149,7 @@ class Download:
             if "twitch.tv" in self.info.url:
                 self.info.chat_location = f"{self.download_dir}/{self.info.title}.json"
                 self.info.tmp_render_location = f"{self.download_dir}/{self.info.title}_chat"
-                cmd = f"tcd chatdownload {self.info.url} -o {self.info.chat_location} --compression"
+                cmd = ["tcd", "chatdownload", f"{self.info.url}", "-o", f"{self.info.chat_location}", "--compression"]
                 print(cmd)
                 self.popen_and_call(self.tcd_dl_post,cmd)
             self.status_queue.put({'status': 'finished' if ret == 0 else 'error'})
