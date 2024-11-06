@@ -9,6 +9,7 @@ import logging
 import re
 from dl_formats import get_format, get_opts, AUDIO_FORMATS
 from datetime import datetime
+import subprocess
 
 log = logging.getLogger('ytdl')
 
@@ -61,6 +62,34 @@ class Download:
         self.loop = None
         self.notifier = None
 
+    def popen_and_call(self, on_exit, popen_args):
+        """
+        Runs the given args in a subprocess.Popen, and then calls the function
+        on_exit when the subprocess completes.
+        on_exit is a callable object, and popen_args is a list/tuple of args that 
+        would give to subprocess.Popen.
+        """
+        def run_in_thread(on_exit, popen_args):
+            proc = subprocess.Popen(*popen_args)
+            proc.wait()
+            on_exit()
+            return
+
+        thread = threading.Thread(target=run_in_thread, args=(on_exit, popen_args))
+        thread.start()
+        # returns immediately after the thread starts
+        return thread
+
+    def tcd_render_post(self):
+        cmd = f"ffmpeg -i {self.info.filename} -i {self.info.tmp_render_location}.mp4 -i {self.info.tmp_render_location}_mask.mp4 -filter_complex \"[1][2]alphamerge[b],[0][b]overlay=x=1570:y=480\" {self.info.filename}.chat.mp4"
+        print(cmd)
+        #todo:cleanup
+        subprocess.Popen(cmd)
+
+    def tcd_dl_post(self):
+        cmd = f"./tcd chatrender -i {self.info.chat_location}.gz -o {self.info.tmp_render_location} --background-color=#00000000 --outline=true --outline-size=2 --generate-mask=true"
+        print(cmd)
+        popen_and_call(tcd_render_post, cmd)
 
     def _download(self):
         try:
@@ -96,6 +125,13 @@ class Download:
                 'postprocessor_hooks': [put_status_postprocessor],
                 **self.ytdl_opts,
             }).download([self.info.url])
+
+            if "twitch.tv" in self.info.url:
+                self.info.chat_location = f"{self.download_dir}/{self.info.title}.json"
+                self.info.tmp_render_location = f"{self.download_dir}/{self.info.title}_chat"
+                cmd = f"tcd chatdownload {self.info.url} -o {self.info.chat_location} --compression"
+                print(cmd)
+                self.popen_and_call(self.tcd_post,cmd)
             self.status_queue.put({'status': 'finished' if ret == 0 else 'error'})
         except yt_dlp.utils.YoutubeDLError as exc:
             self.status_queue.put({'status': 'error', 'msg': str(exc)})
