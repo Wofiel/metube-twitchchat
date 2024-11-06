@@ -10,6 +10,7 @@ import re
 from dl_formats import get_format, get_opts, AUDIO_FORMATS
 from datetime import datetime
 import subprocess
+import threading
 
 log = logging.getLogger('ytdl')
 
