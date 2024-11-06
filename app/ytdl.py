@@ -109,7 +109,7 @@ class Download:
                "--generate-mask=true"
               ]
         print(cmd)
-        popen_and_call(tcd_render_post, (cmd,))
+        self.popen_and_call(tcd_render_post, (cmd,))
 
     def _download(self):
         try:
