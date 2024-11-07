@@ -95,7 +95,7 @@ class Download:
               ]
         print(cmd)
         #todo:cleanup
-        subprocess.Popen(cmd)
+        subprocess.Popen(cmd,)
 
     def tcd_dl_post(self):
         cmd = ["/app/tcd","chatrender",
@@ -109,7 +109,7 @@ class Download:
                "--generate-mask=true"
               ]
         print(cmd)
-        self.popen_and_call(tcd_render_post, (cmd,))
+        self.popen_and_call(self.tcd_render_post, (cmd,))
 
     def _download(self):
         try:
